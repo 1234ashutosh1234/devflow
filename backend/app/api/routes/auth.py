@@ -1,6 +1,9 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.api.dependencies import get_current_user
 from app.core.database import get_db
 from app.schemas.auth import (
     TokenResponse,
@@ -9,6 +12,7 @@ from app.schemas.auth import (
     UserResponse,
 )
 from app.services.auth_service import AuthService
+from app.models.user import User
 
 
 router = APIRouter(
@@ -49,3 +53,16 @@ def login(
         access_token=access_token,
         user=user,
     )
+
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+)
+def get_me(
+    current_user: Annotated[
+        User,
+        Depends(get_current_user),
+    ],
+):
+    return current_user
