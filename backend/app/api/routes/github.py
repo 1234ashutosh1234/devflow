@@ -17,9 +17,6 @@ from app.repositories.repository_repository import (
 from app.schemas.github import GitHubPRReviewRequest
 from app.services.ai_review_service import AIReviewService
 from app.services.github_diff_parser import parse_unified_diff
-from app.services.github_review_publisher import (
-    GitHubReviewPublisher,
-)
 
 
 router = APIRouter(
@@ -178,35 +175,3 @@ def review_github_pull_request(
     )
 
     return review
-
-
-@router.post(
-    "/reviews/{review_id}/publish",
-)
-def publish_github_review(
-    review_id: int,
-    current_user: Annotated[
-        User,
-        Depends(get_current_user),
-    ],
-    db: Annotated[
-        Session,
-        Depends(get_db),
-    ],
-):
-    publisher = GitHubReviewPublisher(db)
-
-    try:
-        return publisher.publish(
-            review_id=review_id,
-            user_id=current_user.id,
-        )
-
-    except HTTPException:
-        raise
-
-    except Exception as exc:
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=str(exc),
-        ) from exc
