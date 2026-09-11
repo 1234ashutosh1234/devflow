@@ -1,0 +1,71 @@
+name: DevFlow CI
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: devflow
+          POSTGRES_PASSWORD: devflow
+          POSTGRES_DB: devflow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U devflow -d devflow"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+psycopg://devflow:devflow@localhost:5432/devflow
+          JWT_SECRET: ci-test-secret
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 30
+          AI_REVIEW_PROVIDER: local
+          GITHUB_API_URL: https://api.github.com
+        run: |
+          python -m pytest -q
+
+      - name: Verify FastAPI application
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+psycopg://devflow:devflow@localhost:5432/devflow
+          JWT_SECRET: ci-test-secret
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 30
+          AI_REVIEW_PROVIDER: local
+          GITHUB_API_URL: https://api.github.com
+        run: |
+          python -c "from app.main import app; print('FASTAPI APP: OK'); print('ROUTES:', len(app.routes))"
