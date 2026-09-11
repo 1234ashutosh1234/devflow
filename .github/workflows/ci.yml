@@ -10,7 +10,8 @@ on:
       - main
 
 jobs:
-  test:
+  backend:
+    name: Backend tests
     runs-on: ubuntu-latest
 
     services:
@@ -46,7 +47,7 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
-      - name: Run tests
+      - name: Run backend tests
         working-directory: backend
         env:
           DATABASE_URL: postgresql+psycopg://devflow:devflow@localhost:5432/devflow
@@ -69,3 +70,30 @@ jobs:
           GITHUB_API_URL: https://api.github.com
         run: |
           python -c "from app.main import app; print('FASTAPI APP: OK'); print('ROUTES:', len(app.routes))"
+
+  frontend:
+    name: Frontend lint and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
