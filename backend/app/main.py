@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.ai_reviews import router as ai_review_router
 from app.api.routes.auth import router as auth_router
@@ -12,12 +13,31 @@ from app.api.routes.repositories import router as repository_router
 from app.api.routes.github import router as github_router
 from app.api.routes.github_publish import router as github_publish_router
 from app.api.routes.github_webhooks import router as github_webhooks_router
+from app.core.config import get_settings
+
+
+settings = get_settings()
+
+cors_origins = [
+    origin.strip()
+    for origin in settings.cors_origins.split(",")
+    if origin.strip()
+]
 
 
 app = FastAPI(
     title="DevFlow API",
     description="AI-powered developer collaboration and code review platform.",
     version="0.1.0",
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -33,7 +53,6 @@ app.include_router(ai_review_router)
 app.include_router(github_router)
 app.include_router(github_webhooks_router)
 app.include_router(github_publish_router)
-
 
 
 @app.get("/health")

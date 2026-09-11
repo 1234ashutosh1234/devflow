@@ -1,10 +1,16 @@
-const API_BASE = "/api/v1";
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim() || "";
+
+const API_BASE = configuredApiUrl
+  ? `${configuredApiUrl.replace(/\/$/, "")}/api/v1`
+  : "/api/v1";
 
 async function readResponse(response) {
   const text = await response.text();
 
   if (!text) {
-    throw new Error(`Server returned an empty response (HTTP ${response.status}).`);
+    throw new Error(
+      `Server returned an empty response (HTTP ${response.status}).`,
+    );
   }
 
   let data;
@@ -12,7 +18,9 @@ async function readResponse(response) {
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error(`Server returned an invalid response (HTTP ${response.status}).`);
+    throw new Error(
+      `Server returned an invalid response (HTTP ${response.status}).`,
+    );
   }
 
   if (!response.ok) {
@@ -58,7 +66,9 @@ export async function login(email, password) {
   });
 
   if (!data.access_token) {
-    throw new Error("Login succeeded but no access token was returned.");
+    throw new Error(
+      "Login succeeded but no access token was returned.",
+    );
   }
 
   localStorage.setItem("devflow_token", data.access_token);
@@ -126,7 +136,11 @@ export async function getFindings(reviewId) {
   return request(`/code-reviews/${reviewId}/findings`);
 }
 
-export async function runGithubReview(owner, repository, pullNumber) {
+export async function runGithubReview(
+  owner,
+  repository,
+  pullNumber,
+) {
   return request("/github/pull-request-review", {
     method: "POST",
     body: JSON.stringify({
