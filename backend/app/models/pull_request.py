@@ -1,13 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import (
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Text,
-    UniqueConstraint,
-)
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -16,12 +9,21 @@ from app.core.database import Base
 class PullRequest(Base):
     __tablename__ = "pull_requests"
 
+    __table_args__ = (
+        UniqueConstraint(
+            "repository_id",
+            "external_number",
+            name="uq_pull_requests_repository_number",
+        ),
+    )
+
     id: Mapped[int] = mapped_column(
         primary_key=True,
+        index=True,
     )
 
     repository_id: Mapped[int] = mapped_column(
-        ForeignKey("repositories.id"),
+        ForeignKey("repositories.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -31,13 +33,8 @@ class PullRequest(Base):
         nullable=False,
     )
 
-    author_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"),
-        nullable=False,
-    )
-
     title: Mapped[str] = mapped_column(
-        String(300),
+        String(255),
         nullable=False,
     )
 
@@ -46,21 +43,25 @@ class PullRequest(Base):
         nullable=True,
     )
 
+    author_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=False,
+    )
+
     source_branch: Mapped[str] = mapped_column(
-        String(200),
+        String(255),
         nullable=False,
     )
 
     target_branch: Mapped[str] = mapped_column(
-        String(200),
-        default="main",
+        String(255),
         nullable=False,
     )
 
     status: Mapped[str] = mapped_column(
-        String(30),
-        default="open",
+        String(50),
         nullable=False,
+        default="open",
     )
 
     created_at: Mapped[datetime] = mapped_column(
@@ -76,11 +77,6 @@ class PullRequest(Base):
         nullable=False,
     )
 
-    merged_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
-
     repository = relationship(
         "Repository",
         back_populates="pull_requests",
@@ -94,12 +90,4 @@ class PullRequest(Base):
         "CodeReview",
         back_populates="pull_request",
         cascade="all, delete-orphan",
-    )
-
-    __table_args__ = (
-        UniqueConstraint(
-            "repository_id",
-            "external_number",
-            name="uq_repository_pull_request_number",
-        ),
     )

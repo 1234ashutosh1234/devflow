@@ -1,12 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import (
-    DateTime,
-    ForeignKey,
-    String,
-    Text,
-    UniqueConstraint,
-)
+from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -15,18 +9,27 @@ from app.core.database import Base
 class Project(Base):
     __tablename__ = "projects"
 
+    __table_args__ = (
+        UniqueConstraint(
+            "organization_id",
+            "key",
+            name="uq_projects_organization_key",
+        ),
+    )
+
     id: Mapped[int] = mapped_column(
         primary_key=True,
+        index=True,
     )
 
     organization_id: Mapped[int] = mapped_column(
-        ForeignKey("organizations.id"),
+        ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
 
     name: Mapped[str] = mapped_column(
-        String(100),
+        String(150),
         nullable=False,
     )
 
@@ -60,22 +63,14 @@ class Project(Base):
         "User",
     )
 
-    repositories = relationship(
+    repository = relationship(
         "Repository",
         back_populates="project",
-        cascade="all, delete-orphan",
+        uselist=False,
     )
 
     tasks = relationship(
         "Task",
         back_populates="project",
         cascade="all, delete-orphan",
-    )
-
-    __table_args__ = (
-        UniqueConstraint(
-            "organization_id",
-            "key",
-            name="uq_project_organization_key",
-        ),
     )

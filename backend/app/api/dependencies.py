@@ -1,17 +1,26 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+)
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.database import get_db
-from app.core.permissions import OrganizationRole, ROLE_LEVELS
+from app.core.permissions import (
+    OrganizationRole,
+    ROLE_LEVELS,
+)
 from app.models.user import User
-from app.repositories.organization_repository import OrganizationRepository
-from app.repositories.user_repository import UserRepository
-
+from app.repositories.organization_repository import (
+    OrganizationRepository,
+)
+from app.repositories.user_repository import (
+    UserRepository,
+)
 
 settings = get_settings()
 

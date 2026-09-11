@@ -11,10 +11,14 @@ class CodeReview(Base):
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
+        index=True,
     )
 
     pull_request_id: Mapped[int] = mapped_column(
-        ForeignKey("pull_requests.id"),
+        ForeignKey(
+            "pull_requests.id",
+            ondelete="CASCADE",
+        ),
         nullable=False,
         index=True,
     )
@@ -25,9 +29,9 @@ class CodeReview(Base):
     )
 
     status: Mapped[str] = mapped_column(
-        String(30),
-        default="pending",
+        String(50),
         nullable=False,
+        default="pending",
     )
 
     summary: Mapped[str | None] = mapped_column(
@@ -53,4 +57,10 @@ class CodeReview(Base):
 
     reviewer = relationship(
         "User",
+    )
+
+    findings = relationship(
+        "ReviewFinding",
+        back_populates="code_review",
+        cascade="all, delete-orphan",
     )

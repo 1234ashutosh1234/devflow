@@ -13,9 +13,18 @@ class Settings(BaseSettings):
     debug: bool = True
 
     database_url: str
+
     jwt_secret: str
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
+
+    openai_api_key: str | None = None
+    openai_model: str = "gpt-5.6-luna"
+    ai_review_provider: str = "local"
+
+    github_api_url: str = "https://api.github.com"
+    github_webhook_secret: str | None = None
+    github_token: str | None = None
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

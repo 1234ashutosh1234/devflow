@@ -11,16 +11,17 @@ class Task(Base):
 
     id: Mapped[int] = mapped_column(
         primary_key=True,
+        index=True,
     )
 
     project_id: Mapped[int] = mapped_column(
-        ForeignKey("projects.id"),
+        ForeignKey("projects.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
 
     title: Mapped[str] = mapped_column(
-        String(200),
+        String(255),
         nullable=False,
     )
 
@@ -30,15 +31,15 @@ class Task(Base):
     )
 
     status: Mapped[str] = mapped_column(
-        String(30),
-        default="todo",
+        String(50),
         nullable=False,
+        default="todo",
     )
 
     priority: Mapped[str] = mapped_column(
-        String(30),
-        default="medium",
+        String(50),
         nullable=False,
+        default="medium",
     )
 
     assignee_id: Mapped[int | None] = mapped_column(

@@ -8,6 +8,7 @@ from app.models.organization import (
 
 
 class OrganizationRepository:
+
     def __init__(self, db: Session):
         self.db = db
 
@@ -27,6 +28,7 @@ class OrganizationRepository:
         statement = select(Organization).where(
             Organization.slug == slug
         )
+
         return self.db.scalar(statement)
 
     def get_by_owner(
@@ -35,8 +37,12 @@ class OrganizationRepository:
     ) -> list[Organization]:
         statement = (
             select(Organization)
-            .where(Organization.owner_id == owner_id)
-            .order_by(Organization.id.desc())
+            .where(
+                Organization.owner_id == owner_id
+            )
+            .order_by(
+                Organization.id.desc()
+            )
         )
 
         return list(
@@ -57,6 +63,43 @@ class OrganizationRepository:
         )
 
         return self.db.scalar(statement)
+
+    def get_members(
+        self,
+        organization_id: int,
+    ) -> list[OrganizationMember]:
+        statement = (
+            select(OrganizationMember)
+            .where(
+                OrganizationMember.organization_id
+                == organization_id
+            )
+            .order_by(
+                OrganizationMember.id
+            )
+        )
+
+        return list(
+            self.db.scalars(statement).all()
+        )
+
+    def create_membership(
+        self,
+        organization_id: int,
+        user_id: int,
+        role: str,
+    ) -> OrganizationMember:
+        membership = OrganizationMember(
+            organization_id=organization_id,
+            user_id=user_id,
+            role=role,
+        )
+
+        self.db.add(membership)
+        self.db.commit()
+        self.db.refresh(membership)
+
+        return membership
 
     def create(
         self,
