@@ -1,170 +1,483 @@
 # DevFlow — AI-Powered Developer Collaboration & Code Review Platform
 
-[![DevFlow CI](https://github.com/1234ashutosh1234/devflow/actions/workflows/ci.yml/badge.svg)](https://github.com/1234ashutosh1234/devflow/actions/workflows/ci.yml)
+> Automated GitHub Pull Request analysis that detects security, maintainability, and performance issues, persists structured findings, and publishes actionable inline comments directly to GitHub.
 
-> A full-stack developer collaboration platform that connects GitHub Pull Requests to automated code review, structured findings, PostgreSQL persistence, and a recruiter-friendly review dashboard.
+## 🚀 Live Demo
 
-## Overview
+**Live application:** https://devflow-1-s18m.onrender.com  
+**Live backend API:** https://devflow-11ku.onrender.com  
+**Swagger / OpenAPI:** https://devflow-11ku.onrender.com/docs  
+**Health check:** https://devflow-11ku.onrender.com/health  
+**GitHub repository:** https://github.com/1234ashutosh1234/devflow
 
-DevFlow turns a GitHub Pull Request into a repeatable code-review workflow:
+The production deployment demonstrates JWT authentication, a connected GitHub repository, Pull Request workflows, automated code reviews, structured findings, review scoring, PostgreSQL persistence, and a React dashboard.
+
+> The free Render backend may sleep after inactivity, so the first request can take longer while the service wakes up.
+
+### Recruiter Dashboard
+
+![DevFlow live dashboard](docs/screenshots/dashboard.png)
+
+Current production demo snapshot:
+
+- **1 Pull Request**
+- **2 automated reviews**
+- **3 findings**
+- **70% average review score**
+- **100% clean review**
+- **40% findings-producing review**
+
+### Login / Authentication
+
+![DevFlow live login](docs/screenshots/login.png)
+
+### Quick Links
+
+| Resource | URL |
+|---|---|
+| Live Demo | https://devflow-1-s18m.onrender.com |
+| Backend API | https://devflow-11ku.onrender.com |
+| Swagger / OpenAPI | https://devflow-11ku.onrender.com/docs |
+| Health Check | https://devflow-11ku.onrender.com/health |
+| GitHub Repository | https://github.com/1234ashutosh1234/devflow |
+
+## 🏆 Why This Project Stands Out
+
+DevFlow is intentionally more than a CRUD application. It demonstrates a complete developer-tooling workflow across external events, API design, authentication, persistence, automated code analysis, frontend UX, CI, and production deployment.
+
+### Strong engineering points
+
+- **Full-stack architecture:** React/Vite frontend + FastAPI backend + PostgreSQL persistence.
+- **Secure authentication:** JWT bearer tokens, password hashing, protected API dependencies, and environment-based secrets.
+- **GitHub integration:** Pull Request metadata, unified diff retrieval, webhook processing, and review publishing.
+- **Webhook security:** HMAC-SHA256 signature validation for GitHub webhook requests.
+- **Automated review engine:** security, maintainability, and performance-oriented detection rules with structured findings.
+- **Review scoring:** findings are converted into an understandable quality score visible in the dashboard.
+- **Database engineering:** SQLAlchemy relationships and Alembic migrations for controlled schema changes.
+- **Frontend engineering:** API-driven React dashboard for projects, Pull Requests, reviews, findings, and GitHub actions.
+- **CI/CD:** GitHub Actions validates backend tests plus frontend lint/build.
+- **Production deployment:** separate live frontend and FastAPI backend services on Render.
+- **Extensible review providers:** provider-based design allows future LLM-backed review implementations.
+
+## 👨‍💼 Recruiter / Interviewer Quick Demo
 
 ```text
-Developer pushes code
-        ↓
+1. Open the live application
+2. Sign in
+3. Show Dashboard metrics
+4. Open Projects
+5. Show the connected GitHub repository
+6. Open Pull Requests
+7. Open review history
+8. Show the 100% clean review
+9. Show the 40% review with findings
+10. Open review details and explain the findings
+11. Open Swagger and show the protected API surface
+12. Show GitHub Actions CI
+13. Explain the architecture and trade-offs
+```
+
+### What to emphasize in an interview
+
+**Backend:** layered FastAPI architecture, dependency injection, Pydantic validation, SQLAlchemy, Alembic, and service/repository separation.
+
+**Security:** JWT authentication, password hashing, protected routes, HMAC webhook verification, and secret management through environment variables.
+
+**Integration:** GitHub Pull Request metadata, diff parsing, webhook events, and review publishing.
+
+**Automation:** multi-rule review detection, severity/confidence metadata, findings persistence, and review scoring.
+
+**DevOps:** Dockerized PostgreSQL, GitHub Actions, Render deployment, and separate production frontend/backend services.
+
+---
+
+## 🚀 Overview
+
+DevFlow is a full-stack developer collaboration and AI-assisted code review platform built around a real GitHub Pull Request workflow.
+
+When a developer pushes a new commit to a Pull Request, GitHub sends a webhook to DevFlow. The backend validates the webhook, retrieves the Pull Request and unified diff, parses changed files, runs automated code analysis, stores the review in PostgreSQL, and publishes the findings back to GitHub as inline review comments.
+
+### End-to-End Flow
+
+```text
+Developer Push
+      ↓
 GitHub Pull Request
-        ↓
-GitHub webhook
-        ↓
-FastAPI backend
-        ↓
-Webhook signature validation
-        ↓
-GitHub PR metadata + unified diff
-        ↓
-Multi-file diff parsing
-        ↓
-Automated review engine
-        ↓
-Structured findings + score
-        ↓
-PostgreSQL persistence
-        ↓
-Review dashboard / GitHub review publishing
+      ↓
+pull_request Webhook
+      ↓
+Public Tunnel / Webhook Endpoint
+      ↓
+FastAPI Backend
+      ↓
+Webhook Signature Validation
+      ↓
+GitHub API
+      ↓
+Pull Request + Unified Diff
+      ↓
+Multi-file Diff Parser
+      ↓
+AI / Automated Review Engine
+      ↓
+Structured Findings + Score
+      ↓
+PostgreSQL
+      ↓
+GitHub Review Publisher
+      ↓
+Inline Comments on Changed Lines
 ```
 
-The project demonstrates backend API design, relational data modeling, authentication, event-driven processing, GitHub API integration, automated static-analysis style checks, React UI development, Docker-based local infrastructure, and CI validation.
+---
 
-## What is working
+# ✨ Features
 
-- JWT authentication with password hashing
-- Organization, project, repository, Pull Request, review, and finding data models
-- FastAPI REST API with protected endpoints
-- PostgreSQL persistence using SQLAlchemy
-- Alembic database migrations
-- GitHub Pull Request integration
-- GitHub `pull_request` webhook handling
+- Automated GitHub Pull Request code review
+- Real GitHub `pull_request` webhook integration
+- Automatic review on `opened`, `reopened`, and `synchronize`
 - HMAC-SHA256 webhook signature verification
-- Pull Request metadata and unified diff retrieval
-- Multi-file diff parsing and reviewable-line detection
-- Deterministic local automated review provider
-- Structured findings with severity and confidence
+- GitHub Pull Request metadata retrieval
+- Unified diff retrieval and parsing
+- Multi-file Pull Request analysis
+- Reviewable-line detection
+- Security issue detection
+- Maintainability checks
+- Performance-oriented checks
+- Severity classification
+- Confidence scoring
 - Review score calculation
-- Review history and findings dashboard
-- GitHub review publishing endpoint
-- React/Vite frontend for projects, Pull Requests, reviews, findings, and GitHub review execution
-- GitHub Actions CI for backend tests plus frontend lint/build
+- PostgreSQL review persistence
+- Structured review finding persistence
+- JWT authentication
+- Password hashing
+- GitHub review publication
+- GitHub inline review comments
+- FastAPI REST API
+- SQLAlchemy ORM
+- Alembic migrations
+- Docker/PostgreSQL development environment
+- Pluggable review-provider architecture
 
-## Product flow
+---
 
-### Dashboard
-
-The dashboard summarizes:
-
-- Pull Request count
-- Review count
-- Finding count
-- Average review score
-- Recent review activity
-- Review health
-
-### Projects
-
-The Projects view loads organization/project data and displays connected repositories, provider, and default branch.
-
-### Pull Requests
-
-The Pull Requests view loads repository Pull Requests and exposes review history for each Pull Request.
-
-### Reviews
-
-The Reviews view shows review status, score, summary, and associated Pull Request information.
-
-### Review details
-
-A review detail page displays each finding with:
-
-- severity
-- category
-- title
-- file/line information when available
-- description
-- remediation suggestion
-
-### GitHub
-
-The GitHub page can invoke the existing DevFlow GitHub review endpoint for a connected repository and Pull Request number.
-
-## Architecture
+# 🏗️ System Architecture
 
 ```text
-                          ┌──────────────────────────┐
-                          │        Developer         │
-                          │      pushes changes      │
-                          └────────────┬─────────────┘
-                                       │
-                                       ▼
-                          ┌──────────────────────────┐
-                          │          GitHub          │
-                          │      Pull Request       │
-                          └────────────┬─────────────┘
-                                       │
-                                pull_request event
-                                       │
-                                       ▼
-                          ┌──────────────────────────┐
-                          │   Public webhook URL     │
-                          │    during local dev      │
-                          └────────────┬─────────────┘
-                                       │
-                                       ▼
-                    ┌───────────────────────────────────┐
-                    │         FastAPI backend            │
-                    │                                   │
-                    │ auth · projects · reviews · GitHub│
-                    └───────────────┬───────────────────┘
-                                    │
-                                    ▼
                          ┌──────────────────────┐
-                         │ Webhook verification │
-                         │    HMAC-SHA256       │
+                         │      Developer       │
+                         │                      │
+                         │     Pushes Code      │
                          └──────────┬───────────┘
                                     │
                                     ▼
                          ┌──────────────────────┐
-                         │    GitHub client     │
-                         │  PR + unified diff   │
+                         │       GitHub         │
+                         │   Pull Request       │
                          └──────────┬───────────┘
+                                    │
+                           pull_request event
                                     │
                                     ▼
                          ┌──────────────────────┐
-                         │     Diff parser      │
-                         │ multi-file changes   │
-                         │ reviewable lines     │
+                         │  Public Webhook URL  │
+                         │   ngrok / Tunnel     │
                          └──────────┬───────────┘
                                     │
                                     ▼
-                         ┌──────────────────────┐
-                         │    Review engine     │
-                         │ security             │
-                         │ maintainability      │
-                         │ performance          │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         ┌──────────────────────┐
-                         │    PostgreSQL        │
-                         │ reviews + findings   │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                 ┌────────────────────────────────────────┐
-                 │           React / Vite UI              │
-                 │ dashboard · projects · PRs · reviews  │
-                 │ findings · GitHub review execution     │
-                 └────────────────────────────────────────┘
+               ┌────────────────────────────────────────┐
+               │             DevFlow Backend            │
+               │                                        │
+               │              FastAPI API               │
+               └───────────────────┬────────────────────┘
+                                   │
+                                   ▼
+                       ┌──────────────────────┐
+                       │ Webhook Validation   │
+                       │                      │
+                       │ X-Hub-Signature-256  │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │   GitHub Client      │
+                       │                      │
+                       │ PR Metadata          │
+                       │ Unified Diff         │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │    Diff Parser       │
+                       │                      │
+                       │ Multi-file parsing   │
+                       │ Reviewable lines     │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │   Review Engine      │
+                       │                      │
+                       │ Security             │
+                       │ Maintainability      │
+                       │ Performance          │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │    Review Service    │
+                       │                      │
+                       │ Findings             │
+                       │ Score                │
+                       │ Status               │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │      PostgreSQL      │
+                       │                      │
+                       │ Users                │
+                       │ Projects             │
+                       │ Repositories         │
+                       │ Pull Requests        │
+                       │ Reviews              │
+                       │ Findings             │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │ GitHub Review API    │
+                       │                      │
+                       │ Summary              │
+                       │ Inline comments      │
+                       └──────────┬───────────┘
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │ GitHub Pull Request  │
+                       │                      │
+                       │ Review + Comments    │
+                       └──────────────────────┘
 ```
 
-## Backend API surface
+---
+
+# 🔄 Event-Driven Review Workflow
+
+```text
+1. Developer pushes a commit
+                ↓
+2. GitHub updates the Pull Request
+                ↓
+3. GitHub sends a pull_request webhook
+                ↓
+4. DevFlow reads the raw request body
+                ↓
+5. HMAC-SHA256 signature is verified
+                ↓
+6. Repository and Pull Request are identified
+                ↓
+7. Pull Request metadata is fetched
+                ↓
+8. Unified diff is fetched
+                ↓
+9. Changed files and reviewable lines are parsed
+                ↓
+10. Review engine analyzes the code
+                ↓
+11. Findings are generated
+                ↓
+12. Overall review score is calculated
+                ↓
+13. Review + findings are stored in PostgreSQL
+                ↓
+14. GitHub Review API publishes the results
+                ↓
+15. Developers see inline comments on changed lines
+```
+
+---
+
+# 🧠 Automated Code Review
+
+The current local review provider performs deterministic analysis over changed code.
+
+### Detection Rules
+
+| Category | Detection |
+|---|---|
+| Security | Hardcoded credentials |
+| Security | `eval()` |
+| Security | `exec()` |
+| Security | Shell command execution |
+| Maintainability | Bare `except` |
+| Maintainability | TODO/FIXME markers |
+| Performance | `range(len(...))` |
+
+### Finding Structure
+
+Every finding contains structured information:
+
+```text
+Filename
+Line Number
+Category
+Severity
+Title
+Description
+Suggestion
+Confidence
+```
+
+Example:
+
+```text
+HIGH: Possible hardcoded secret
+
+A credential-like value appears to be hardcoded directly
+in source code.
+
+Suggestion:
+Move the secret to an environment variable or a managed
+secret store.
+
+Confidence: 97%
+```
+
+---
+
+# 📊 Review Scoring
+
+Each review receives an overall score.
+
+A real webhook-triggered test produced:
+
+```text
+Review ID: 11
+Files analyzed: 3
+Findings: 12
+Score: 40/100
+Status: completed_with_findings
+```
+
+The findings covered:
+
+```text
+Security
+Maintainability
+Performance
+```
+
+---
+
+# 🗄️ Database Architecture
+
+DevFlow uses PostgreSQL for persistent application data.
+
+```text
+Organization
+     │
+     ├── Users / Memberships
+     │
+     └── Projects
+           │
+           └── Repository
+                 │
+                 └── Pull Request
+                        │
+                        └── Code Review
+                               │
+                               └── Review Findings
+```
+
+### Core Entities
+
+- Organizations
+- Users
+- Memberships
+- Projects
+- Repositories
+- Pull Requests
+- Code Reviews
+- Review Findings
+- Tasks
+
+SQLAlchemy is used as the ORM/data-access layer and Alembic manages schema migrations.
+
+---
+
+# 🔐 Authentication
+
+DevFlow uses JWT-based authentication for protected API endpoints.
+
+```text
+User
+  │
+  ▼
+POST /api/v1/auth/login
+  │
+  ▼
+Credential Verification
+  │
+  ▼
+JWT Access Token
+  │
+  ▼
+Authorization: Bearer <token>
+  │
+  ▼
+Protected API
+```
+
+Passwords are hashed using bcrypt through Passlib.
+
+---
+
+# 🔒 Webhook Security
+
+DevFlow validates GitHub webhooks using:
+
+```text
+X-Hub-Signature-256
+```
+
+The validation process is:
+
+```text
+Raw Request Body
+       +
+GITHUB_WEBHOOK_SECRET
+       ↓
+HMAC-SHA256
+       ↓
+Compare Against GitHub Signature
+```
+
+Invalid or unsigned requests are rejected before review processing.
+
+Example:
+
+```text
+Unsigned Request
+      ↓
+403 Forbidden
+```
+
+Valid GitHub webhook:
+
+```text
+GitHub Request
+      ↓
+Signature Verified
+      ↓
+Review Processing
+      ↓
+200 OK
+```
+
+---
+
+# 🌐 API
 
 ### Authentication
 
@@ -174,345 +487,220 @@ POST /api/v1/auth/login
 GET  /api/v1/auth/me
 ```
 
-### Organizations
+### Pull Requests
 
 ```text
-GET  /api/v1/organizations
-POST /api/v1/organizations
-GET  /api/v1/organizations/{organization_id}/members
-POST /api/v1/organizations/{organization_id}/members
+Pull Request management
+Review history
 ```
 
-### Projects and repositories
+### Code Reviews
 
 ```text
-GET  /api/v1/projects/organizations/{organization_id}
-POST /api/v1/projects/organizations/{organization_id}
-GET  /api/v1/projects/{project_id}
-GET  /api/v1/projects/{project_id}/repositories
-POST /api/v1/projects/{project_id}/repositories
-GET  /api/v1/repositories/{repository_id}
+Review creation
+Review retrieval
+Review findings
 ```
 
-### Pull Requests and reviews
+### GitHub
 
 ```text
-GET  /api/v1/repositories/{repository_id}/pull-requests
-POST /api/v1/repositories/{repository_id}/pull-requests
-GET  /api/v1/pull-requests/{pull_request_id}
-GET  /api/v1/pull-requests/{pull_request_id}/reviews
-POST /api/v1/pull-requests/{pull_request_id}/reviews
-GET  /api/v1/code-reviews/{review_id}
-GET  /api/v1/code-reviews/{review_id}/findings
+GitHub integration
+Pull Request retrieval
+Review publishing
 ```
 
-### Dashboard and automated review
+### Webhook
 
 ```text
-GET  /api/v1/dashboard/summary
-POST /api/v1/pull-requests/{pull_request_id}/ai-review
-```
-
-### GitHub integration
-
-```text
-POST /api/v1/github/pull-request-review
 POST /api/v1/github/webhook
-POST /api/v1/github/reviews/{review_id}/publish
 ```
 
-### Health
+---
+
+# 📚 API Documentation
+
+When the backend is running:
+
+### Swagger UI
 
 ```text
-GET /health
+http://127.0.0.1:8000/docs
 ```
 
-## Automated review engine
-
-The current local provider is deterministic so the repository can be tested without depending on an external AI service.
-
-The implemented rules include:
-
-| Category | Detection |
-|---|---|
-| Security | hardcoded credential-like values |
-| Security | `eval()` usage |
-| Security | `exec()` usage |
-| Security | shell execution with `shell=True` |
-| Maintainability | bare `except` |
-| Maintainability | `TODO` / `FIXME` markers |
-| Performance | `range(len(...))` pattern |
-
-Each finding is stored with structured metadata:
+### OpenAPI
 
 ```text
-filename
-line_number
-category
-severity
-title
-description
-suggestion
-confidence
+http://127.0.0.1:8000/openapi.json
 ```
 
-The provider architecture is designed so additional review providers can be added without replacing the service layer.
+---
 
-## Database model
+# 🛠️ Technology Stack
 
-```text
-Organization
-   │
-   ├── Memberships ── Users
-   │
-   └── Projects
-         │
-         └── Repositories
-               │
-               └── Pull Requests
-                     │
-                     └── Code Reviews
-                           │
-                           └── Review Findings
-```
-
-Core persisted entities include:
-
-- organizations
-- organization memberships
-- users
-- projects
-- repositories
-- pull requests
-- code reviews
-- review findings
-
-SQLAlchemy is used for ORM/data access and Alembic manages database migrations.
-
-## Authentication and security
-
-Authentication uses JWT bearer tokens for protected API routes.
-
-```text
-POST /api/v1/auth/login
-        ↓
-credential verification
-        ↓
-JWT access token
-        ↓
-Authorization: Bearer <token>
-        ↓
-protected API endpoint
-```
-
-Passwords are stored as hashes, not plaintext credentials.
-
-GitHub webhook requests are protected using `X-Hub-Signature-256`. DevFlow validates the signature against the raw request body and configured webhook secret before processing the event.
-
-Never commit real tokens, webhook secrets, database passwords, or `.env` files.
-
-## Tech stack
-
-### Backend
+## Backend
 
 - Python
 - FastAPI
 - Uvicorn
-- SQLAlchemy 2
-- Pydantic v2
-- pydantic-settings
+- SQLAlchemy
+- Pydantic
+- Pydantic Settings
 - Alembic
-- PostgreSQL 17
+- PostgreSQL
 - HTTPX
 
-### Authentication
+## Authentication
 
 - JWT
-- python-jose
-- Passlib / bcrypt
+- Python-JOSE
+- Passlib
+- bcrypt
 
-### Review engine
+## AI / Code Review
 
-- Python automated review provider
-- provider factory architecture
-- structured finding model
-- severity classification
-- confidence scoring
+- Python-based review engine
+- Pluggable provider architecture
+- Deterministic local review provider
+- Structured findings
+- Severity classification
+- Confidence scoring
 
-### GitHub
+## GitHub Integration
 
 - GitHub REST API
-- GitHub Pull Request webhooks
-- GitHub Pull Request diff retrieval
-- GitHub review publishing
-- inline review comment support
+- GitHub Pull Request Webhooks
+- GitHub Pull Request Reviews
+- GitHub inline review comments
 - HMAC-SHA256 webhook verification
 
-### Frontend
-
-- React 19
-- Vite 8
-- React Router
-- JavaScript / JSX
-- Oxlint
-
-### Infrastructure and tooling
+## Infrastructure
 
 - Docker
 - Docker Compose
-- PostgreSQL container
-- ngrok for local webhook testing
-- GitHub Actions
+- PostgreSQL
+- ngrok for local webhook development
 
-## Project structure
+---
+
+# 📁 Project Structure
 
 ```text
 devflow/
-├── .github/
-│   └── workflows/
-│       └── ci.yml
+│
 ├── backend/
-│   ├── ai_reviewer/
-│   ├── alembic/
 │   ├── app/
 │   │   ├── api/
+│   │   │   └── routes/
+│   │   │
 │   │   ├── core/
+│   │   │
 │   │   ├── integrations/
+│   │   │
 │   │   ├── models/
+│   │   │
 │   │   ├── repositories/
+│   │   │
 │   │   ├── schemas/
+│   │   │
 │   │   ├── services/
-│   │   └── main.py
-│   └── tests/
+│   │   │
+│   │   └── workers/
+│   │
+│   └── alembic/
+│
+├── ai-reviewer/
+│
 ├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── api.js
-│   │   ├── App.jsx
-│   │   ├── index.css
-│   │   └── main.jsx
-│   ├── package.json
-│   ├── package-lock.json
-│   └── vite.config.js
-├── .env.example
+│
+├── github-review-demo/
+│
+├── docs/
+│
+├── infrastructure/
+│
 ├── docker-compose.yml
+├── requirements.txt
+├── .env.example
+├── .gitignore
 ├── LICENSE
-├── README.md
-└── requirements.txt
+└── README.md
 ```
 
-## Local setup
+---
 
-### Prerequisites
+# ⚙️ Local Setup
 
-- Python 3.13 recommended
-- Node.js 24 recommended for the current frontend toolchain
-- Docker Desktop
-- Git
-
-### 1. Clone
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/1234ashutosh1234/devflow.git
 cd devflow
 ```
 
-### 2. Start PostgreSQL
+## 2. Create a Virtual Environment
 
-```bash
-docker compose up -d
-```
+### Windows
 
-### 3. Configure environment
-
-Create your local `.env` from `.env.example` and provide the required application settings.
-
-For real GitHub webhook testing, configure the GitHub token, GitHub API URL, and webhook secret required by the backend.
-
-### 4. Create and activate a Python environment
-
-#### Windows CMD
-
-```cmd
+```powershell
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-#### PowerShell
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-#### Linux / macOS
+### Linux / macOS
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 5. Install backend dependencies
+## 3. Install Dependencies
 
 ```bash
-cd backend
 pip install -r requirements.txt
 ```
 
-### 6. Start FastAPI
+## 4. Configure Environment Variables
+
+Create `.env` from `.env.example`.
+
+Configure:
+
+```text
+DATABASE_URL
+JWT_SECRET
+JWT_ALGORITHM
+GITHUB_TOKEN
+GITHUB_API_URL
+GITHUB_WEBHOOK_SECRET
+```
+
+Never commit real credentials.
+
+## 5. Start PostgreSQL
 
 ```bash
+docker compose up -d
+```
+
+## 6. Start the Backend
+
+```bash
+cd backend
 python -m uvicorn app.main:app --reload
 ```
 
-Backend:
+The backend runs at:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Swagger:
+---
 
-```text
-http://127.0.0.1:8000/docs
-```
+# 🔗 GitHub Webhook Setup
 
-OpenAPI:
-
-```text
-http://127.0.0.1:8000/openapi.json
-```
-
-### 7. Start the frontend
-
-Open another terminal:
-
-```cmd
-cd frontend
-npm ci
-npm run dev
-```
-
-Frontend:
-
-```text
-http://localhost:5173
-```
-
-The Vite development server proxies `/api` requests to the local FastAPI server.
-
-### 8. Validate the frontend
-
-```bash
-npm run lint
-npm run build
-```
-
-Both commands are also enforced by CI.
-
-## GitHub webhook setup for local development
-
-For local webhook testing, expose port 8000 through a public tunnel.
+For local development, expose FastAPI through a public tunnel.
 
 Example:
 
@@ -520,132 +708,368 @@ Example:
 ngrok http 8000
 ```
 
-Configure the GitHub repository webhook URL as:
+ngrok provides a public URL similar to:
 
 ```text
-https://YOUR-NGROK-DOMAIN/api/v1/github/webhook
+https://YOUR-NGROK-DOMAIN.ngrok-free.dev
 ```
 
-Use JSON content delivery and enable Pull Request events.
-
-For the webhook secret, configure the same value in the backend environment and GitHub webhook settings.
-
-Supported review-triggering Pull Request events include the workflow events implemented by the backend such as opened, reopened, and synchronize.
-
-## CI/CD
-
-GitHub Actions validates the project on pushes to `main` and feature branches and on Pull Requests targeting `main`.
-
-The pipeline contains two jobs:
+Configure your GitHub webhook as:
 
 ```text
-Backend tests
-    ├── PostgreSQL service
-    ├── install backend dependencies
-    ├── run pytest
-    └── verify FastAPI application
-
-Frontend lint and build
-    ├── install Node dependencies
-    ├── npm run lint
-    └── npm run build
+https://YOUR-NGROK-DOMAIN.ngrok-free.dev/api/v1/github/webhook
 ```
 
-A green CI run means both the backend test suite and the frontend production build have passed.
-
-## Testing strategy
-
-The backend test suite covers application behavior including automated review components, webhook handling, schemas, and dashboard services.
-
-The frontend validation currently includes:
-
-- Oxlint with zero warnings/errors in the checked codebase
-- Vite production build
-
-The GitHub Actions workflow runs both validation layers automatically.
-
-## Demo walkthrough
-
-A simple recruiter/interviewer walkthrough is:
+Use:
 
 ```text
-1. Start PostgreSQL
-2. Start FastAPI
-3. Start React/Vite
-4. Sign in to DevFlow
-5. Open Dashboard
-6. Open Projects and show connected repository
-7. Open Pull Requests and select a PR
-8. Open Reviews and inspect review score/status
-9. Open a review and inspect findings
-10. Open GitHub and run a PR review
-11. Show the resulting review data in DevFlow
-12. Show GitHub Actions with both CI jobs green
+Content-Type: application/json
 ```
 
-## Engineering highlights
-
-This project demonstrates several practical engineering patterns:
-
-- layered FastAPI architecture
-- dependency injection
-- repository/service separation
-- Pydantic request/response validation
-- SQLAlchemy relationships and persistence
-- database migrations with Alembic
-- JWT authentication and authorization
-- GitHub API integration
-- event-driven webhook processing
-- HMAC request verification
-- deterministic automated code review
-- structured finding storage
-- React dashboard state management
-- frontend/backend API integration
-- Dockerized local PostgreSQL
-- automated CI checks
-
-## Current limitations
-
-- The local review provider is deterministic rather than a hosted LLM by default.
-- Local GitHub webhook development requires a public tunnel such as ngrok.
-- Webhook duplicate-delivery protection is currently process-memory based.
-- Production deployment and horizontal-scaling configuration are not yet the focus of the project.
-
-## Future improvements
-
-- persistent webhook idempotency with delivery identifiers
-- asynchronous background review workers
-- richer LLM-assisted review explanations
-- repository-aware review context
-- improved GitHub comment threading and lifecycle management
-- richer Pull Request comparison views
-- role administration UI
-- production deployment configuration
-- observability, metrics, and tracing
-
-## Why this project is recruiter-ready
-
-DevFlow is intentionally more than a CRUD application. It demonstrates a complete workflow across external events, APIs, persistence, automated code analysis, security controls, frontend UX, and CI.
-
-A recruiter or interviewer can inspect the repository and follow a concrete engineering path:
+Select the:
 
 ```text
-GitHub event
-   → API
-   → validation
-   → diff parsing
-   → automated analysis
-   → persistence
-   → dashboard
-   → CI verification
+Pull requests
 ```
 
-That makes the project useful for demonstrating backend engineering, full-stack development, integration work, and practical software-engineering discipline.
+event.
 
-## Repository
+The GitHub webhook secret must match:
 
-GitHub: https://github.com/1234ashutosh1234/devflow
+```text
+GITHUB_WEBHOOK_SECRET
+```
 
 ---
 
-Built as a portfolio project focused on practical full-stack and developer-tooling engineering.
+# 🧪 End-to-End Verification
+
+DevFlow has been tested against a real GitHub Pull Request.
+
+### Verified Sequence
+
+```text
+Git Push
+    ↓
+GitHub Pull Request Updated
+    ↓
+pull_request synchronize
+    ↓
+GitHub Webhook
+    ↓
+ngrok
+    ↓
+FastAPI
+    ↓
+Webhook Signature Validation
+    ↓
+GitHub PR + Diff Retrieval
+    ↓
+Multi-file Diff Parsing
+    ↓
+Automated Review
+    ↓
+12 Findings
+    ↓
+PostgreSQL Persistence
+    ↓
+GitHub Review Publication
+    ↓
+Inline Comments
+```
+
+### Verified Result
+
+```text
+Review ID: 11
+Files: 3
+Findings: 12
+Score: 40/100
+Status: completed_with_findings
+```
+
+The review findings were successfully displayed as inline comments in the GitHub Pull Request.
+
+---
+
+# 📸 Demo
+
+Recommended screenshots for the project:
+
+### GitHub Pull Request
+
+Show:
+
+- Pull Request
+- Changed files
+- DevFlow review
+- Inline review comments
+
+### Swagger
+
+Show:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### Review Results
+
+Show:
+
+- Review score
+- Finding count
+- Severity
+- Filename
+- Line number
+- Suggestion
+- Confidence
+
+---
+
+# ✅ Successfully Demonstrated
+
+The project has successfully demonstrated:
+
+- Real GitHub webhook delivery
+- HMAC webhook validation
+- Automatic `synchronize` review triggering
+- GitHub Pull Request retrieval
+- Unified diff retrieval
+- Multi-file diff parsing
+- Automated code analysis
+- Review generation
+- PostgreSQL persistence
+- Review finding persistence
+- GitHub review publication
+- GitHub inline comments
+
+---
+
+# 🧱 Engineering Concepts
+
+## Backend
+
+- REST API development
+- Service-layer architecture
+- Repository pattern
+- Dependency injection
+- Schema validation
+- Error handling
+
+## Database
+
+- Relational data modeling
+- SQLAlchemy ORM
+- Repository-based data access
+- Foreign-key relationships
+- Database migrations
+
+## Security
+
+- JWT authentication
+- Password hashing
+- Environment-based secrets
+- HMAC-SHA256 webhook verification
+- API authorization
+
+## Integration
+
+- GitHub REST API
+- GitHub Webhooks
+- Pull Request diff retrieval
+- GitHub Review API
+- Inline review comments
+
+## Event-Driven Processing
+
+```text
+GitHub Event
+     ↓
+Webhook
+     ↓
+Validation
+     ↓
+Processing
+     ↓
+Review
+     ↓
+Persistence
+     ↓
+GitHub Publication
+```
+
+---
+
+# 🚧 Current Limitations
+
+- Webhook idempotency is currently process-memory based
+- Local webhook development requires a public tunnel
+- The local provider uses deterministic review rules
+- Background review processing can be expanded
+- Production deployment configuration is still evolving
+
+---
+
+# 🔮 Future Improvements
+
+## AI
+
+- Context-aware LLM reasoning
+- Repository-aware analysis
+- Architecture-aware code review
+- Better false-positive reduction
+- Natural-language review summaries
+
+## GitHub
+
+- GitHub Checks integration
+- Commit status reporting
+- Review dismissal handling
+- Review approval workflows
+- Repository-specific review rules
+
+## Backend
+
+- Background job queue
+- Persistent webhook idempotency
+- Distributed workers
+- Caching
+- GitHub rate-limit handling
+
+## Frontend
+
+- Review dashboard
+- Review history
+- Repository health metrics
+- Team analytics
+- Finding trends
+- Developer productivity metrics
+
+## Developer Experience
+
+- Custom review rules
+- Configurable severity thresholds
+- `.devflow.yml`
+- Finding suppression
+- Finding acknowledgment
+- Notifications
+
+---
+
+# 🔒 Security Notes
+
+Never commit:
+
+```text
+.env
+GitHub tokens
+API keys
+JWT secrets
+Webhook secrets
+Database passwords
+```
+
+Use `.env.example` with placeholder values.
+
+If credentials are accidentally exposed:
+
+```text
+Revoke Credential
+       ↓
+Generate Replacement
+       ↓
+Update Environment
+       ↓
+Restart Application
+```
+
+---
+
+# 💼 Recruiter Highlights
+
+DevFlow demonstrates practical experience with:
+
+- Python backend development
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- JWT authentication
+- REST API design
+- GitHub API integration
+- GitHub Webhooks
+- HMAC-SHA256 security
+- Event-driven processing
+- Unified diff parsing
+- Multi-file analysis
+- Automated code review
+- AI-assisted developer tooling
+- Docker
+- API documentation
+- Service/repository architecture
+
+---
+
+# 🎯 Project Objective
+
+DevFlow combines backend engineering, database design, authentication, third-party API integration, webhook security, automated code analysis, and AI-assisted developer tooling into a single developer productivity platform.
+
+The goal is to shorten the feedback loop between:
+
+```text
+Code Change
+    ↓
+Automated Analysis
+    ↓
+Actionable Findings
+    ↓
+Developer Feedback
+```
+
+---
+
+# 🏆 Project Achievement
+
+A real GitHub Pull Request was used to validate the complete automated workflow:
+
+```text
+Developer
+    ↓
+GitHub
+    ↓
+Webhook
+    ↓
+DevFlow
+    ↓
+Code Analysis
+    ↓
+Structured Findings
+    ↓
+PostgreSQL
+    ↓
+GitHub Review
+    ↓
+Inline Comments
+```
+
+This confirms that the project can participate in a real GitHub-based development workflow rather than operating only as an isolated local code-analysis script.
+
+---
+
+# 📄 License
+
+This project is currently provided for educational and portfolio purposes.
+
+---
+
+# 👨‍💻 Author
+
+## Ashutosh Raj
+
+GitHub:
+
+https://github.com/1234ashutosh1234
+
+Repository:
+
+https://github.com/1234ashutosh1234/devflow
