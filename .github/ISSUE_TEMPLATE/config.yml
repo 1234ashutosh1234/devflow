@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/1234ashutosh1234/devflow/security/advisories/new
+    about: Do not report security vulnerabilities in public issues. Use private vulnerability reporting.
+  - name: Contribution guide
+    url: https://github.com/1234ashutosh1234/devflow/blob/main/CONTRIBUTING.md
+    about: Read how to set up DevFlow and submit a pull request.
+  - name: Security policy
+    url: https://github.com/1234ashutosh1234/devflow/blob/main/SECURITY.md
+    about: Read the project's supported versions and vulnerability disclosure process.
