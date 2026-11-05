@@ -1,0 +1,78 @@
+name: Feature request
+description: Suggest an improvement or new capability for DevFlow.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Please describe the user problem and why solving it would help DevFlow users.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this feature solve?
+      description: Explain the problem or limitation you have encountered.
+      placeholder: As a DevFlow user, I find it difficult to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+      description: Describe what you would like DevFlow to do.
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case and expected benefit
+      description: Who would use this, and how would it improve their workflow?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area would this affect?
+      multiple: true
+      options:
+        - Backend API
+        - Frontend / dashboard
+        - Authentication / authorization
+        - GitHub integration / webhooks
+        - Automated code review
+        - Database / reporting
+        - Developer experience / documentation
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any workaround or alternative you have considered.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add mock-ups, examples, links, or other context. Do not include credentials or private data.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for a similar suggestion.
+          required: true
+        - label: This request describes a user need rather than only a preferred implementation.
+          required: true
