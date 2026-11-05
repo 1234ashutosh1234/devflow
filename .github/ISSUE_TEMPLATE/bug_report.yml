@@ -1,0 +1,123 @@
+name: Bug report
+description: Report a reproducible problem in DevFlow.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a problem. Please search existing issues first.
+        **Do not include passwords, access tokens, webhook secrets, private keys, or personal data.**
+        For a security vulnerability, use [private vulnerability reporting](https://github.com/1234ashutosh1234/devflow/security/advisories/new) instead of opening a public issue.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the problem clearly and briefly.
+      placeholder: When I..., DevFlow...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest set of steps that reproduces the issue.
+      placeholder: |
+        1. Open...
+        2. Select...
+        3. Trigger...
+        4. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What did you expect DevFlow to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: What did DevFlow do instead? Include the exact error message if safe.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of DevFlow is affected?
+      multiple: true
+      options:
+        - Backend API
+        - Frontend / dashboard
+        - Authentication / authorization
+        - GitHub integration / webhooks
+        - Automated code review
+        - Database / migrations
+        - Installation / configuration
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      options:
+        - Every time
+        - Sometimes
+        - Happened once
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: DevFlow version or commit
+      description: Provide a release version or commit SHA if known. Otherwise write `main`.
+      placeholder: main / v0.1.0 / commit SHA
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include relevant OS, browser, Python, Node.js, database, or deployment details.
+      placeholder: |
+        OS:
+        Browser:
+        Python:
+        Node.js:
+        Database:
+        Deployment:
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Remove credentials, tokens, webhook secrets, personal data, and private repository details before sharing.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for a similar report.
+          required: true
+        - label: I removed secrets and sensitive information from this report.
+          required: true
