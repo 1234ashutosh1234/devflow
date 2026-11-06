@@ -211,8 +211,13 @@ function LoginScreen({ onLogin }) {
               opacity: loading ? 0.6 : 1,
             }}
           >
-            {loading ? "Signing in..." : "Sign in to DevFlow"}
+            {loading ? "Connecting to DevFlow backend..." : "Sign in to DevFlow"}
           </button>
+          {loading && (
+            <div style={{ marginTop: 10, fontSize: 11, color: COLORS.muted, textAlign: "center" }}>
+             ⚡ Starting the cloud connection. This may take a little longer on the first request.
+            </div>
+          )}
         </form>
       </div>
     </div>
@@ -532,17 +537,17 @@ function DashboardPage({ dashboard, onSelectReview }) {
       >
         <StatCard
           label="Pull requests"
-          value={dashboard?.total_pull_requests ?? 0}
+          value={dashboard?.total_pull_requests ?? (dashboard ? 0 : "...")}
         />
 
         <StatCard
           label="Reviews"
-          value={dashboard?.total_reviews ?? 0}
+          value={dashboard?.total_reviews ?? (dashboard ? 0 : "...")}
         />
 
         <StatCard
           label="Findings"
-          value={dashboard?.total_findings ?? 0}
+          value={dashboard?.total_findings ?? (dashboard ? 0 : "...")}
         />
 
         <StatCard
@@ -1489,6 +1494,9 @@ export default function App() {
         getOrganizations(),
       ]);
 
+setDashboard(dashboardData);
+
+
       const projectResults = await Promise.all(
         organizationData.map((organization) =>
           getProjects(organization.id),
@@ -1496,12 +1504,14 @@ export default function App() {
       );
 
       const allProjects = projectResults.flat();
+      setProjects(allProjects);
 
       const repositoryResults = await Promise.all(
         allProjects.map((project) => getRepositories(project.id)),
       );
 
       const allRepositories = repositoryResults.flat();
+      setRepositories(allRepositories);
 
       const pullRequestResults = await Promise.all(
         allRepositories.map((repository) =>
@@ -1510,6 +1520,7 @@ export default function App() {
       );
 
       const allPullRequests = pullRequestResults.flat();
+      setPullRequests(allPullRequests);
 
       const reviewResults = await Promise.all(
         allPullRequests.map((pullRequest) =>
@@ -1518,11 +1529,6 @@ export default function App() {
       );
 
       const allReviews = reviewResults.flat();
-
-      setDashboard(dashboardData);
-      setProjects(allProjects);
-      setRepositories(allRepositories);
-      setPullRequests(allPullRequests);
       setReviews(allReviews);
     } catch (err) {
       setError(err.message || "Unable to load workspace.");
@@ -1586,21 +1592,7 @@ export default function App() {
     );
   }
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: COLORS.background,
-          color: COLORS.text,
-          display: "grid",
-          placeItems: "center",
-        }}
-      >
-        Loading DevFlow workspace...
-      </div>
-    );
-  }
+// Immediate shell rendering - non-blocking
 
   return (
     <div
@@ -1633,6 +1625,32 @@ export default function App() {
           }}
           refreshing={refreshing}
         />
+
+        {loading && (
+          <div
+            style={{
+              marginBottom: 18,
+              padding: "12px 18px",
+              borderRadius: 12,
+              background: "rgba(108,92,255,.12)",
+              border: "1px solid rgba(108,92,255,.3)",
+              color: "#c4b5fd",
+              fontSize: 13,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span>⚡</span>
+              <span>Loading workspace data from DevFlow API...</span>
+            </div>
+            <span style={{ fontSize: 11, color: "#a79fff", background: "rgba(108,92,255,.2)", padding: "3px 10px", borderRadius: 12, fontWeight: 700 }}>
+             SYNCING
+            </span>
+          </div>
+        )}
 
         {error && (
           <div

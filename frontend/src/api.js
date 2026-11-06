@@ -1,4 +1,8 @@
-const configuredApiUrl = import.meta.env.VITE_API_URL?.trim() || "";
+const configuredApiUrl =
+  import.meta.env.VITE_API_URL?.trim() ||
+  (typeof window !== "undefined" && window.location.hostname.endsWith(".onrender.com")
+    ? "https://devflow-11ku.onrender.com"
+    : "");
 
 const API_BASE = configuredApiUrl
   ? `${configuredApiUrl.replace(/\/$/, "")}/api/v1`
