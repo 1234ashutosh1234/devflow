@@ -1,11 +1,9 @@
 version: 2
 
 updates:
-  # Root Python dependencies
+  # Python dependencies (root and backend)
   - package-ecosystem: "pip"
     directory: "/"
-    exclude-paths:
-      - "backend/**"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -14,23 +12,6 @@ updates:
     open-pull-requests-limit: 5
     groups:
       python-root-minor-and-patch:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # Backend Python dependencies
-  - package-ecosystem: "pip"
-    directory: "/backend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Kolkata"
-    open-pull-requests-limit: 5
-    groups:
-      python-backend-minor-and-patch:
         patterns:
           - "*"
         update-types:
