@@ -14,6 +14,7 @@ updates:
     open-pull-requests-limit: 5
     groups:
       python-root-and-backend-minor-and-patch:
+        group-by: dependency-name
         patterns:
           - "*"
         update-types:
