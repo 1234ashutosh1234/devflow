@@ -1118,7 +1118,7 @@ function ReviewDetail({ review, findings, onBack }) {
             title="Clean review"
             text="No findings were generated for this review."
           />
-        ) : (
+                ) : (
           <div style={{ display: "grid", gap: 12 }}>
             {findings.map((finding) => (
               <div key={finding.id} style={cardStyle}>
@@ -1153,20 +1153,44 @@ function ReviewDetail({ review, findings, onBack }) {
                     </h3>
                   </div>
 
-                  {finding.line_number && (
-                    <div
-                      style={{
-                        padding: "5px 9px",
-                        borderRadius: 8,
-                        background: "#0c111d",
-                        border: `1px solid ${COLORS.border}`,
-                        color: COLORS.muted,
-                        fontSize: 11,
-                      }}
-                    >
-                      Line {finding.line_number}
-                    </div>
-                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      gap: 6,
+                    }}
+                  >
+                    {finding.filename && (
+                      <div
+                        style={{
+                          color: COLORS.muted,
+                          fontSize: 11,
+                          maxWidth: 280,
+                          overflowWrap: "anywhere",
+                          textAlign: "right",
+                        }}
+                        title={finding.filename}
+                      >
+                        {finding.filename}
+                      </div>
+                    )}
+
+                    {finding.line_number && (
+                      <div
+                        style={{
+                          padding: "5px 9px",
+                          borderRadius: 8,
+                          background: "#0c111d",
+                          border: `1px solid ${COLORS.border}`,
+                          color: COLORS.muted,
+                          fontSize: 11,
+                        }}
+                      >
+                        Line {finding.line_number}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <p
