@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - staging
       - "feature/**"
       - "feat/**"
       - "fix/**"
@@ -94,6 +95,9 @@ jobs:
       - name: Run backend tests (SQLite unit tests + PostgreSQL integration tests)
         working-directory: backend
         run: python -m pytest -q --junitxml=junit.xml
+
+      - name: Test production monitoring
+        run: python -m pytest -q scripts/tests/test_production_monitor.py
 
       - name: Verify FastAPI application imports
         working-directory: backend
