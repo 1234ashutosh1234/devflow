@@ -1,0 +1,38 @@
+name: DevFlow Production Smoke Test
+
+on:
+  workflow_run:
+    workflows:
+      - DevFlow CI
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  production-smoke:
+    name: Production smoke test
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the commit that passed CI
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Verify Render deployment and PostgreSQL readiness
+        run: >-
+          python scripts/production_smoke_test.py
+          --base-url https://devflow-11ku.onrender.com
+          --expected-commit "${{ github.event.workflow_run.head_sha }}"
+          --attempts 30
+          --interval 15
+          --request-timeout 6
