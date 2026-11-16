@@ -1,0 +1,40 @@
+name: DevFlow Production Health Monitor
+
+on:
+  # Daily check is intentionally low-frequency: the current Render Free API
+  # sleeps after inactivity, so frequent probes would keep it awake.
+  schedule:
+    - cron: "35 4 * * *" # 04:35 UTC / 10:05 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: devflow-production-health-monitor
+  cancel-in-progress: false
+
+jobs:
+  production-health:
+    name: Daily production health check
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.13"
+
+      - name: Check production API, database, and frontend
+        run: >-
+          python scripts/production_monitor.py
+          --api-url https://devflow-11ku.onrender.com
+          --frontend-url https://devflow-1-s18m.onrender.com
+          --attempts 12
+          --interval 15
+          --request-timeout 12
